@@ -1,0 +1,40 @@
+{
+  "name": "asbuildbrowser",
+  "version": "1.0.0",
+  "description": "A web application for browsing Ford AsBuilt XML files",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\""
+  },
+  "keywords": [
+    "ford",
+    "asbuilt",
+    "xml",
+    "browser"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.13.0",
+    "@mui/material": "^5.13.0",
+    "fast-xml-parser": "^4.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.1.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "prettier": "^3.2.5",
+    "terser": "^5.29.2",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5"
+  }
+}
