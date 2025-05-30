@@ -1,6 +1,6 @@
 # AsBuilt Browser
 
-A web application for browsing Ford AsBuilt files. This project was created through VIBE coding - a fully AI-driven development process where an AI assistant (Claude) wrote, modified, and debugged the entire codebase in real-time.
+A web application for browsing Ford AsBuilt files.
 
 ## Disclaimer
 
