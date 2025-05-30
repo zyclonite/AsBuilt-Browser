@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, Container, Typography, Paper, Button } from '@mui/material';
+import { Box, Container, Typography, Paper, Button, Link } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { XMLParser } from 'fast-xml-parser';
 import { AsBuiltViewer } from './components/AsBuiltViewer';
 import { AsBuiltData } from './types';
@@ -69,6 +70,37 @@ function App() {
         </Paper>
 
         {asBuiltData && <AsBuiltViewer data={asBuiltData} />}
+
+        <Box 
+          component="footer" 
+          sx={{ 
+            mt: 4, 
+            py: 2, 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            gap: 1
+          }}
+        >
+          <Link 
+            href="https://github.com/carp3/AsBuilt-Browser" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'text.primary'
+              }
+            }}
+          >
+            <GitHubIcon sx={{ mr: 0.5 }} />
+            <Typography variant="body2">
+              carp3/AsBuilt-Browser
+            </Typography>
+          </Link>
+        </Box>
       </Box>
     </Container>
   );
