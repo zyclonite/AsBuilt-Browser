@@ -14,7 +14,11 @@ export interface Module {
   '@_CODE2'?: string;
   '@_CODE3'?: string;
   '@_FCODE'?: string;
-  [key: string]: string | undefined;
+  DATA: Array<{
+    '@_LABEL': string;
+    CODE: string[];
+  }>;
+  [key: string]: any;
 }
 
 export interface VehicleData {
@@ -34,31 +38,22 @@ export interface AsBuiltData {
   AS_BUILT_DATA: {
     VEHICLE: {
       VIN: string;
-      VEHICLE_TYPE: string;
-      VEHICLE_YEAR: string;
-      VEHICLE_MODEL: string;
-      VEHICLE_MAKE: string;
-      VEHICLE_ENGINE: string;
-      VEHICLE_TRANS: string;
-      VEHICLE_DRIVE: string;
-      VEHICLE_BODY: string;
-      VEHICLE_OPTIONS: string;
-      VEHICLE_OPTIONS_LIST: {
-        OPTION: {
-          '@_CODE': string;
-          '@_NAME': string;
-        }[];
-      };
-      VEHICLE_MODULES: {
-        MODULE: Module[];
-      };
-      ERROR?: {
+      NODEID: string;
+      ERROR?: Array<{
         '@_CODE': string;
         '@_DESC': string;
-      };
+      }>;
       [key: string]: any;
     };
   };
+  VEHICLE: {
+    [key: string]: any;
+  };
+  NODEID: string;
+  errors?: Array<{
+    '@_CODE': string;
+    '@_DESC': string;
+  }>;
 }
 
 export interface ComparisonResult {
