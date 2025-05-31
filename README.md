@@ -1,6 +1,8 @@
 # AsBuilt Browser
 
-A web application for browsing Ford AsBuilt files.
+A web application for browsing and comparing Ford AsBuilt files.
+
+![Screenshot](https://i.imgur.com/Gkd77O7.png)
 
 You can use it [HERE](https://pedram.online/asbuilt/)
 
