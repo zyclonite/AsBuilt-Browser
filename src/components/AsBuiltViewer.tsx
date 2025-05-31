@@ -31,8 +31,15 @@ interface ModuleInfo {
 }
 
 interface ErrorData {
-  ERRORCODE: string;
-  ERRORMSG: string;
+  '@_CODE': string;
+  '@_DESC': string;
+  ERRORCODE?: string;
+  ERRORMSG?: string;
+}
+
+interface ModuleDataItem {
+  '@_LABEL': string;
+  CODE?: string[];
 }
 
 // Module mapping from ModuleList.txt
@@ -355,7 +362,7 @@ function getNodeModuleName(prefix: string): string {
   return nodeIdToModule[prefix] || prefix;
 }
 
-export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
+export const AsBuiltViewer: React.FC<AsBuiltViewerProps> = ({ data }) => {
   // Debug the data structure
   console.log('AsBuiltViewer received data:', JSON.stringify(data, null, 2));
 
@@ -365,7 +372,6 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
   }
 
   const { VEHICLE } = data.AS_BUILT_DATA;
-  console.log('Raw NODEID data:', JSON.stringify(VEHICLE.NODEID, null, 2));
   const nodeData = parseNodeId(VEHICLE.NODEID);
   console.log('Parsed node data:', JSON.stringify(nodeData, null, 2));
 
@@ -376,13 +382,6 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
   });
   const fCodeArray = Array.from(fCodes).sort();
 
-  // Get errors if they exist
-  const errors = Array.isArray(VEHICLE.ERROR)
-    ? VEHICLE.ERROR
-    : VEHICLE.ERROR
-      ? [VEHICLE.ERROR]
-      : [];
-
   // Group BCE modules by their prefix and sort them
   const bceModules = Object.entries(VEHICLE)
     .filter(([key]) => key.startsWith('BCE_MODULE'))
@@ -391,25 +390,27 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
         if (!moduleData || !('DATA' in moduleData)) return acc;
 
         const typedModuleData = moduleData as Module;
-        typedModuleData.DATA.forEach(data => {
-          const prefix = data['@_LABEL'].split('-')[0];
-          const moduleInfo = getModuleInfo(data['@_LABEL']);
+        if (typedModuleData.DATA && Array.isArray(typedModuleData.DATA)) {
+          typedModuleData.DATA.forEach((data: ModuleDataItem) => {
+            const prefix = data['@_LABEL'].split('-')[0];
+            const moduleInfo = getModuleInfo(data['@_LABEL']);
 
-          if (!acc[prefix]) {
-            acc[prefix] = {
-              info: moduleInfo || {
-                longName: `Module ${prefix}`,
-                shortName: prefix,
-                prefix: prefix,
-              },
-              data: [],
-            };
-          }
-          acc[prefix].data.push(data);
-        });
+            if (!acc[prefix]) {
+              acc[prefix] = {
+                info: moduleInfo || {
+                  longName: `Module ${prefix}`,
+                  shortName: prefix,
+                  prefix: prefix,
+                },
+                data: [],
+              };
+            }
+            acc[prefix].data.push(data);
+          });
+        }
         return acc;
       },
-      {} as Record<string, { info: ModuleInfo; data: Data[] }>
+      {} as Record<string, { info: ModuleInfo; data: ModuleDataItem[] }>
     );
 
   // Sort BCE modules by their long names
@@ -422,6 +423,21 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
     getNodeModuleName(a.prefix).localeCompare(getNodeModuleName(b.prefix))
   );
 
+  // Get errors if they exist
+  const vehicleErrors = Array.isArray(VEHICLE.ERROR)
+    ? VEHICLE.ERROR
+    : VEHICLE.ERROR
+      ? [VEHICLE.ERROR]
+      : [];
+
+  const rootErrors = Array.isArray(data.errors)
+    ? data.errors
+    : data.errors
+      ? [data.errors]
+      : [];
+
+  const allErrors = [...vehicleErrors, ...rootErrors];
+
   return (
     <Box>
       <Paper sx={{ p: 3, mb: 3, bgcolor: 'primary.dark' }}>
@@ -431,14 +447,14 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
       </Paper>
 
       {/* Display errors if any */}
-      {errors.length > 0 && (
+      {allErrors.length > 0 && (
         <Paper sx={{ p: 3, mb: 3, bgcolor: 'error.dark' }}>
           <Typography variant="h6" color="error.contrastText" gutterBottom>
             Errors Found
           </Typography>
-          {errors.map((error: ErrorData, index: number) => (
+          {allErrors.map((error: ErrorData, index: number) => (
             <Typography key={index} color="error.contrastText">
-              Error {error.ERRORCODE}: {error.ERRORMSG}
+              {error['@_CODE'] || error.ERRORCODE}: {error['@_DESC'] || error.ERRORMSG}
             </Typography>
           ))}
         </Paper>
@@ -501,9 +517,9 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
                   {data.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell>{item['@_LABEL']}</TableCell>
-                      {item.CODE.map((code: string, codeIndex: number) => (
+                      {item.CODE && Array.isArray(item.CODE) ? item.CODE.map((code: string, codeIndex: number) => (
                         <TableCell key={codeIndex}>{code}</TableCell>
-                      ))}
+                      )) : null}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -547,12 +563,20 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {typedModuleData.DATA.map((data: Data, index: number) => (
+                      {typedModuleData.DATA && Array.isArray(typedModuleData.DATA) && typedModuleData.DATA.map((data: ModuleDataItem, index: number) => (
                         <TableRow key={index}>
                           <TableCell>{data['@_LABEL']}</TableCell>
-                          {data.CODE.map((code: string, codeIndex: number) => (
-                            <TableCell key={codeIndex}>{code}</TableCell>
-                          ))}
+                          <TableCell>
+                            {data.CODE && Array.isArray(data.CODE) ? data.CODE.map((code: string, codeIndex: number) => (
+                              <Box
+                                key={codeIndex}
+                                component="span"
+                                sx={{ mr: 1 }}
+                              >
+                                {code}
+                              </Box>
+                            )) : null}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -564,4 +588,4 @@ export function AsBuiltViewer({ data }: AsBuiltViewerProps) {
         })}
     </Box>
   );
-}
+};
