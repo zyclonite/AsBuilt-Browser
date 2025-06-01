@@ -98,11 +98,11 @@ export const AsBuiltComparer: React.FC = () => {
           preserveOrder: false,
           trimValues: true,
           parseAttributeValue: true,
-          parseTagValue: true,
+          parseTagValue: false,  // critical change
           tagValueProcessor: (tagName, tagValue) => {
-            // Preserve leading zeros in hex values
-            if (tagValue && /^[0-9A-Fa-f]+$/.test(tagValue)) {
-              return tagValue.padStart(4, '0');
+            if (typeof tagValue === 'string' && /^[0-9A-Fa-f]+$/.test(tagValue)) {
+              const padded = tagValue.padStart(4, '0');
+              return padded;
             }
             return tagValue;
           }
@@ -142,11 +142,11 @@ export const AsBuiltComparer: React.FC = () => {
         preserveOrder: false,
         trimValues: true,
         parseAttributeValue: true,
-        parseTagValue: true,
+        parseTagValue: false,  // critical change
         tagValueProcessor: (tagName, tagValue) => {
-          // Preserve leading zeros in hex values
-          if (tagValue && /^[0-9A-Fa-f]+$/.test(tagValue)) {
-            return tagValue.padStart(4, '0');
+          if (typeof tagValue === 'string' && /^[0-9A-Fa-f]+$/.test(tagValue)) {
+            const padded = tagValue.padStart(4, '0');
+            return padded;
           }
           return tagValue;
         }
