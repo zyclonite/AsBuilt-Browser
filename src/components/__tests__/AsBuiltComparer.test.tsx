@@ -1,8 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { AsBuiltComparer } from '../AsBuiltComparer';
-import { XMLParser } from 'fast-xml-parser';
 import { jest } from '@jest/globals';
 
 // Mock XML files
@@ -80,7 +78,7 @@ describe('AsBuiltComparer', () => {
 
   it('renders file upload buttons and compare button', () => {
     render(<AsBuiltComparer />);
-    
+
     expect(screen.getByText('Select Car 1')).toBeInTheDocument();
     expect(screen.getByText('Select Car 2')).toBeInTheDocument();
     expect(screen.getByText('Compare Files')).toBeInTheDocument();
@@ -88,13 +86,13 @@ describe('AsBuiltComparer', () => {
 
   it('handles file uploads correctly', async () => {
     render(<AsBuiltComparer />);
-    
+
     const file1Input = screen.getByLabelText('Select Car 1');
     const file2Input = screen.getByLabelText('Select Car 2');
-    
+
     fireEvent.change(file1Input, { target: { files: [mockFile1] } });
     fireEvent.change(file2Input, { target: { files: [mockFile2] } });
-    
+
     await waitFor(() => {
       expect(screen.getByText('Compare Files')).not.toBeDisabled();
     });
@@ -102,18 +100,18 @@ describe('AsBuiltComparer', () => {
 
   it('compares files and shows differences', async () => {
     render(<AsBuiltComparer />);
-    
+
     // Upload files
     const file1Input = screen.getByLabelText('Select Car 1');
     const file2Input = screen.getByLabelText('Select Car 2');
-    
+
     fireEvent.change(file1Input, { target: { files: [mockFile1] } });
     fireEvent.change(file2Input, { target: { files: [mockFile2] } });
-    
+
     // Click compare button
     const compareButton = screen.getByText('Compare Files');
     fireEvent.click(compareButton);
-    
+
     // Wait for comparison results
     await waitFor(() => {
       expect(screen.getByText('Car 1 VIN: TEST123')).toBeInTheDocument();
@@ -128,18 +126,18 @@ describe('AsBuiltComparer', () => {
 
   it('handles part number comparison correctly', async () => {
     render(<AsBuiltComparer />);
-    
+
     // Upload files
     const file1Input = screen.getByLabelText('Select Car 1');
     const file2Input = screen.getByLabelText('Select Car 2');
-    
+
     fireEvent.change(file1Input, { target: { files: [mockFile1] } });
     fireEvent.change(file2Input, { target: { files: [mockFile2] } });
-    
+
     // Click compare button
     const compareButton = screen.getByText('Compare Files');
     fireEvent.click(compareButton);
-    
+
     // Wait for comparison results and expand the module
     await waitFor(() => {
       const moduleAccordion = screen.getByText(/BCE/);
@@ -175,18 +173,18 @@ describe('AsBuiltComparer', () => {
     );
 
     render(<AsBuiltComparer />);
-    
+
     // Upload files
     const file1Input = screen.getByLabelText('Select Car 1');
     const file2Input = screen.getByLabelText('Select Car 2');
-    
+
     fireEvent.change(file1Input, { target: { files: [mockFile1] } });
     fireEvent.change(file2Input, { target: { files: [identicalFile2] } });
-    
+
     // Click compare button
     const compareButton = screen.getByText('Compare Files');
     fireEvent.click(compareButton);
-    
+
     // Wait for comparison results and expand the module
     await waitFor(() => {
       const moduleAccordion = screen.getByText(/BCE/);
@@ -208,12 +206,12 @@ describe('AsBuiltComparer', () => {
     );
 
     render(<AsBuiltComparer />);
-    
+
     const file1Input = screen.getByLabelText('Select Car 1');
     fireEvent.change(file1Input, { target: { files: [invalidFile] } });
-    
+
     await waitFor(() => {
       expect(screen.getByText(/Error parsing file/)).toBeInTheDocument();
     });
   });
-}); 
+});

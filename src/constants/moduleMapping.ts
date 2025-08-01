@@ -4,7 +4,6 @@ export interface ModuleInfo {
   prefix: string;
 }
 
-// Module mapping from ModuleList.txt
 export const moduleMapping: Record<string, ModuleInfo> = {
   '783': { longName: '(Audio) Digital Signal Processing Module', shortName: 'DSP', prefix: '783' },
   '761': { longName: '4X4 Control Module', shortName: '4X4M', prefix: '761' },
@@ -139,6 +138,16 @@ export const moduleMapping: Record<string, ModuleInfo> = {
     shortName: 'BdyCM',
     prefix: '726',
   },
+  '703': {
+    longName: 'Body Control Module',
+    shortName: 'BCM',
+    prefix: '703',
+  },
+  '6F0': {
+    longName: 'Body Control Module C / Battery Junction Box',
+    shortName: 'BCMC/BJB',
+    prefix: '6F0',
+  },
   '751': {
     longName: 'Battery Energy Control Module',
     shortName: 'BECM',
@@ -151,7 +160,6 @@ export const moduleMapping: Record<string, ModuleInfo> = {
   },
 };
 
-// F-code mapping from NodeNames.txt
 export const fCodeMapping: Record<string, string> = {
   F10A: 'ECU Cal-Config Part Number',
   F110: 'On-line Diagnostic Database Reference Number',
@@ -182,9 +190,9 @@ export const fCodeMapping: Record<string, string> = {
   E6F2: 'Configuration and Programming Version',
   E6F3: 'CAN Diagnostic Specification Version',
   FFEE: 'Reserved For Part II',
+  F190: 'Original Config (VIN)',
 };
 
-// Node ID to module name mapping
 export const nodeIdToModule: Record<string, string> = {
   '783': 'DSP',
   '761': '4X4M',
@@ -273,6 +281,8 @@ export const nodeIdToModule: Record<string, string> = {
   '726': 'BdyCM',
   '751': 'BECM',
   '7C7': 'ACCM',
+  '703': 'BCM',
+  '6F0': 'BCMC/BJB',
 };
 
 export function getModuleInfo(label: string): ModuleInfo | undefined {
@@ -287,4 +297,4 @@ export function getFCodeDescription(code: string): string {
 
 export function getNodeModuleName(prefix: string): string {
   return nodeIdToModule[prefix] || prefix;
-} 
+}

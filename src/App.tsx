@@ -120,7 +120,7 @@ function App() {
         }}
       >
         <Link
-          href="https://github.com/carp3/AsBuilt-Browser"
+          href="https://github.com/zyclonite/AsBuilt-Browser"
           target="_blank"
           rel="noopener noreferrer"
           sx={{
@@ -133,7 +133,7 @@ function App() {
           }}
         >
           <GitHubIcon sx={{ mr: 0.5 }} />
-          <Typography variant="body2">carp3/AsBuilt-Browser</Typography>
+          <Typography variant="body2">zyclonite/AsBuilt-Browser</Typography>
         </Link>
       </Box>
     </Container>

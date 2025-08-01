@@ -7,18 +7,16 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Alert,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { XMLParser } from 'fast-xml-parser';
-import { AsBuiltData, ComparisonResult, NodeComparisonResult, Module } from '../types';
-import { getModuleInfo, getFCodeDescription } from '../constants/moduleMapping';
+import { ComparisonResult, NodeComparisonResult } from '../types';
+import { getModuleInfo } from '../constants/moduleMapping';
 
 const xmlToJson = (xml: Element): any => {
   // Create the return object
@@ -109,10 +107,10 @@ export const AsBuiltComparer: React.FC = () => {
         });
         const result = parser.parse(e.target?.result as string);
         console.log(`File ${fileNumber} parsed result:`, result);
-        
+
         // Extract VIN - handle both attribute and element formats
-        const vin = result.AS_BUILT_DATA.VEHICLE['@_VIN'] || 
-                   result.AS_BUILT_DATA.VEHICLE.VIN || 
+        const vin = result.AS_BUILT_DATA.VEHICLE['@_VIN'] ||
+                   result.AS_BUILT_DATA.VEHICLE.VIN ||
                    'Unknown VIN';
         if (fileNumber === 1) {
           setFile1(file);
@@ -262,7 +260,7 @@ export const AsBuiltComparer: React.FC = () => {
           for (let j = 0; j < Math.max(codes1.length, codes2.length); j++) {
             const code1 = codes1[j] || '';
             const code2 = codes2[j] || '';
-            
+
             if (code1 !== code2) {
               // Track character-level differences
               const charDifferences: number[] = [];
@@ -490,13 +488,13 @@ export const AsBuiltComparer: React.FC = () => {
           {Object.entries(groupedResults).map(([moduleId, results]) => {
             const moduleInfo = getModuleInfo(moduleId);
             const moduleName = moduleInfo ? `${moduleInfo.shortName} (${moduleInfo.longName})` : moduleId;
-            
+
             return (
               <Accordion key={moduleId}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>
-                    {moduleName} - {results.length} blocks {results.filter(r => r.differences.some(diff => diff.length > 0)).length === 0 ? 
-                      <Box component="span" sx={{ color: 'success.main', fontWeight: 'bold' }}>Identical</Box> : 
+                    {moduleName} - {results.length} blocks {results.filter(r => r.differences.some(diff => diff.length > 0)).length === 0 ?
+                      <Box component="span" sx={{ color: 'success.main', fontWeight: 'bold' }}>Identical</Box> :
                       `(${results.filter(r => r.differences.some(diff => diff.length > 0)).length} differences)`
                     }
                   </Typography>
@@ -505,7 +503,7 @@ export const AsBuiltComparer: React.FC = () => {
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="subtitle1">
                       Part Numbers:{' '}
-                      <Box component="span" sx={{ 
+                      <Box component="span" sx={{
                         color: partNumberMap1.get(moduleId) === partNumberMap2.get(moduleId) ? 'success.main' : 'inherit',
                         fontWeight: partNumberMap1.get(moduleId) === partNumberMap2.get(moduleId) ? 'bold' : 'normal'
                       }}>
@@ -543,20 +541,20 @@ export const AsBuiltComparer: React.FC = () => {
                               const hasDifferences = charDifferences.length > 0;
                               const isIdentical = !hasDifferences && code1 !== '' && code2 !== '';
                               const isNA = code1 === 'N/A' || code2 === 'N/A';
-                              
+
                               return (
                                 <React.Fragment key={codeIndex}>
-                                  <TableCell 
-                                    sx={{ 
-                                      backgroundColor: isNA 
-                                        ? 'warning.dark' 
-                                        : isIdentical 
-                                          ? 'success.light' 
+                                  <TableCell
+                                    sx={{
+                                      backgroundColor: isNA
+                                        ? 'warning.dark'
+                                        : isIdentical
+                                          ? 'success.light'
                                           : 'transparent',
-                                      color: isNA 
-                                        ? 'warning.contrastText' 
-                                        : isIdentical 
-                                          ? 'success.contrastText' 
+                                      color: isNA
+                                        ? 'warning.contrastText'
+                                        : isIdentical
+                                          ? 'success.contrastText'
                                           : 'inherit'
                                     }}
                                   >
@@ -573,17 +571,17 @@ export const AsBuiltComparer: React.FC = () => {
                                       </Box>
                                     ))}
                                   </TableCell>
-                                  <TableCell 
-                                    sx={{ 
-                                      backgroundColor: isNA 
-                                        ? 'warning.dark' 
-                                        : isIdentical 
-                                          ? 'success.light' 
+                                  <TableCell
+                                    sx={{
+                                      backgroundColor: isNA
+                                        ? 'warning.dark'
+                                        : isIdentical
+                                          ? 'success.light'
                                           : 'transparent',
-                                      color: isNA 
-                                        ? 'warning.contrastText' 
-                                        : isIdentical 
-                                          ? 'success.contrastText' 
+                                      color: isNA
+                                        ? 'warning.contrastText'
+                                        : isIdentical
+                                          ? 'success.contrastText'
                                           : 'inherit'
                                     }}
                                   >
@@ -616,7 +614,7 @@ export const AsBuiltComparer: React.FC = () => {
           {Object.entries(groupedNodeResults).map(([moduleId, results]) => {
             const moduleInfo = getModuleInfo(moduleId);
             const moduleName = moduleInfo ? `${moduleInfo.shortName} (${moduleInfo.longName})` : moduleId;
-            
+
             return (
               <Accordion key={moduleId}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -657,4 +655,4 @@ export const AsBuiltComparer: React.FC = () => {
       )}
     </Box>
   );
-}; 
+};

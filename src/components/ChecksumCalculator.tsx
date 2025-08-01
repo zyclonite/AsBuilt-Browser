@@ -39,8 +39,8 @@ export const ChecksumCalculator: React.FC = () => {
           setModuleId(value);
         }
       } else if (parts.length === 3) {
-        if (/^[0-9A-F]{3}$/.test(parts[0]) && 
-            /^[0-9]{2}$/.test(parts[1]) && 
+        if (/^[0-9A-F]{3}$/.test(parts[0]) &&
+            /^[0-9]{2}$/.test(parts[1]) &&
             /^[0-9]{0,2}$/.test(parts[2])) {
           setModuleId(value);
         }
@@ -91,14 +91,14 @@ export const ChecksumCalculator: React.FC = () => {
 
     // Add all bytes first
     const allBytes = [...moduleIdBytes];
-    
+
     // Add all bytes of Code 1
     allBytes.push(code1.slice(0, 2), code1.slice(2, 4));
-    
+
     if (code2) {
       allBytes.push(code2.slice(0, 2), code2.slice(2, 4));
     }
-    
+
     if (code3) {
       allBytes.push(code3.slice(0, 2), code3.slice(2, 4));
     }
@@ -198,4 +198,4 @@ export const ChecksumCalculator: React.FC = () => {
       </Paper>
     </Box>
   );
-}; 
+};
